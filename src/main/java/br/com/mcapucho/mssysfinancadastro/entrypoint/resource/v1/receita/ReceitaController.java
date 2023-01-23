@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(value = "/receitas/v1")
 public class ReceitaController {
@@ -38,6 +41,9 @@ public class ReceitaController {
     @PostMapping()
     public ResponseEntity<ReceitaHttpResponse> cadastrar(@Valid @RequestBody ReceitaHttpRequest request) {
         ReceitaEntity receitaEntity = receitaCreateUseCase.execute(receitaHttpMapper.httpToEntity(request));
+        ReceitaHttpResponse receitaHttpResponse = receitaHttpMapper.entityToHttp(receitaEntity);
+        receitaHttpResponse.add(linkTo(methodOn(ReceitaController.class)
+                .listarPorId(receitaHttpResponse.getTransactionId())).withSelfRel());
         return ResponseEntity.status(HttpStatus.CREATED).body(receitaHttpMapper.entityToHttp(receitaEntity));
     }
 
@@ -48,6 +54,8 @@ public class ReceitaController {
 
         receitaEntityList.forEach(result -> {
             ReceitaHttpResponse receitaHttpResponse = receitaHttpMapper.entityToHttp(result);
+            receitaHttpResponse.add(linkTo(methodOn(ReceitaController.class)
+                    .listarPorId(receitaHttpResponse.getTransactionId())).withSelfRel());
             receitaHttpResponseList.add(receitaHttpResponse);
         });
 
@@ -57,7 +65,9 @@ public class ReceitaController {
     @GetMapping("/{id}")
     public ResponseEntity<ReceitaHttpResponse> listarPorId(@PathVariable("id") String transactionId) {
         ReceitaEntity receitaEntity = receitaFindByIdUseCase.execute(transactionId);
-        return ResponseEntity.status(HttpStatus.OK).body(receitaHttpMapper.entityToHttp(receitaEntity));
+        ReceitaHttpResponse receitaHttpResponse = receitaHttpMapper.entityToHttp(receitaEntity);
+        receitaHttpResponse.add(linkTo(methodOn(ReceitaController.class).listar()).withSelfRel());
+        return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponse);
     }
 
     @DeleteMapping("/{id}")
