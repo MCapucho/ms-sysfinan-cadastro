@@ -5,6 +5,8 @@ import br.com.mcapucho.mssysfinancadastro.core.gateway.ReceitaGateway;
 import br.com.mcapucho.mssysfinancadastro.dataprovider.mapper.ReceitaDBMapper;
 import br.com.mcapucho.mssysfinancadastro.dataprovider.model.ReceitaDB;
 import br.com.mcapucho.mssysfinancadastro.dataprovider.repository.ReceitaRepository;
+import br.com.mcapucho.mssysfinancadastro.util.FilterPageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,16 +43,34 @@ public class ReceitaGatewayImpl implements ReceitaGateway {
     }
 
     @Override
+    public List<ReceitaEntity> findAll(FilterPageable filterPageable) {
+        Page<ReceitaDB> receitaDBList = receitaRepository.findAll(filterPageable.listByPage());
+        List<ReceitaEntity> receitaEntityList = new ArrayList<>();
+
+        receitaDBList.forEach(result -> {
+            ReceitaEntity receitaEntity = receitaDBMapper.dbToEntity(result);
+            receitaEntityList.add(receitaEntity);
+        });
+
+        return receitaEntityList;
+    }
+
+    @Override
     public ReceitaEntity findById(String transactionId) {
         return receitaRepository.findById(transactionId)
                 .stream()
                 .map(receitaDBMapper::dbToEntity)
                 .findAny()
-                .orElseThrow();
+                .orElse(null);
     }
 
     @Override
     public void deleteById(String transactionId) {
         receitaRepository.deleteById(transactionId);
+    }
+
+    @Override
+    public Boolean findByDescription(String description) {
+        return receitaRepository.existsByDescription(description);
     }
 }
