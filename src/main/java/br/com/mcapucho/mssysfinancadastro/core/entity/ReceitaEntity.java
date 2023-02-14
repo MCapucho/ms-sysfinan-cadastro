@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReceitaEntity {
 
-    public String transactionId;
-    public String description;
-    public Boolean status;
+    private String transactionId;
+    private String description;
+    private Boolean status;
 }

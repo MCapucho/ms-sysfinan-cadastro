@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: ms-sysfinan-cadastro
   datasource:
     url: jdbc:mysql://${MYSQL_HOST}:3307/${MYSQL_SCHEMA}?createDatabaseIfNotExist=true
     username: ${MYSQL_USER}
@@ -12,13 +14,16 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 management:
-  health:
-    diskspace:
-      enabled: false
-  endpoint:
-    health:
-      show-details: always
   endpoints:
     web:
       exposure:
         include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    metrics:
+      enabled: false
+    prometheus:
+      enabled: true

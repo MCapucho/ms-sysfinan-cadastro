@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class ReceitaHttpRequest {
 
     @NotBlank(message = "O campo descrição não pode ser vazio ou nulo")
-    public String description;
-    public Boolean status;
+    private String description;
+    private Boolean status;
 }

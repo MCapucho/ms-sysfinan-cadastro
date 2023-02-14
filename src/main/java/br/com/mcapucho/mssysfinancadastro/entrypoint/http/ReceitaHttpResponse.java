@@ -12,7 +12,7 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 public class ReceitaHttpResponse extends RepresentationModel<ReceitaHttpResponse> {
 
-    public String transactionId;
-    public String description;
-    public Boolean status;
+    private String transactionId;
+    private String description;
+    private Boolean status;
 }

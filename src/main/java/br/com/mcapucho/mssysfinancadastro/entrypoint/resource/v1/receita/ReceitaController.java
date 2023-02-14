@@ -7,6 +7,7 @@ import br.com.mcapucho.mssysfinancadastro.entrypoint.http.ReceitaHttpResponse;
 import br.com.mcapucho.mssysfinancadastro.entrypoint.mapper.ReceitaHttpMapper;
 import br.com.mcapucho.mssysfinancadastro.util.FilterPageable;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Log4j2
 @RestController
 @RequestMapping(value = "/receitas/v1")
 public class ReceitaController {
@@ -39,6 +41,7 @@ public class ReceitaController {
         this.receitaUpdateUseCase = receitaUpdateUseCase;
     }
 
+    @SuppressWarnings("unused")
     @PostMapping()
     public ResponseEntity<ReceitaHttpResponse> create(@Valid @RequestBody ReceitaHttpRequest request) {
         ReceitaEntity receitaEntity = receitaCreateUseCase.execute(receitaHttpMapper.httpToEntity(request));
@@ -63,9 +66,10 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponseList);
     }
 
+    @SuppressWarnings("unused")
     @GetMapping("/page")
     public ResponseEntity<List<ReceitaHttpResponse>> findAllPageable(FilterPageable filterPageable) {
-        List<ReceitaEntity> receitaEntityList = receitaListUseCase.execute();
+        List<ReceitaEntity> receitaEntityList = receitaListUseCase.execute(filterPageable);
         List<ReceitaHttpResponse> receitaHttpResponseList = new ArrayList<>();
 
         receitaEntityList.forEach(result -> {
@@ -86,15 +90,17 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponse);
     }
 
+    @SuppressWarnings("unused")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") String transactionId) {
+    public ResponseEntity<Object> deleteById(@PathVariable("id") String transactionId) {
         receitaDeleteByIdUseCase.execute(transactionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @SuppressWarnings("unused")
     @PatchMapping("/{id}")
     public ResponseEntity<ReceitaHttpResponse> updateById(@PathVariable("id") String transactionId,
-                                                              @RequestBody ReceitaHttpRequest receitaHttpRequest) {
+                                                          @RequestBody ReceitaHttpRequest receitaHttpRequest) {
         ReceitaEntity receitaEntity = receitaUpdateUseCase.execute(
                 transactionId, receitaHttpMapper.httpToEntity(receitaHttpRequest));
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpMapper.entityToHttp(receitaEntity));
