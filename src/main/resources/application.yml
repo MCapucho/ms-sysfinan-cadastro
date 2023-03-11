@@ -35,3 +35,16 @@ server:
     enabled: true
     mime-types: application/json
     min-response-size: 1024
+
+opentracing:
+  jaeger:
+    enable-w3c-propagation: true
+    enable-128-bit-traces: true
+    expand-exception-logs: true
+    service-name: ms-sysfinan-cadastro
+    udp-sender:
+      host: localhost
+      port: 6831
+    sampler-type: const
+    sampler-param: 1
+    log-spans: true

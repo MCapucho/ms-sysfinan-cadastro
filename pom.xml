@@ -85,6 +85,13 @@
 			<version>${commons-lang3.version}</version>
 		</dependency>
 
+		<!-- Jaeger -->
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
