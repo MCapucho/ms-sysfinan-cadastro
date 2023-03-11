@@ -6,6 +6,7 @@ import br.com.mcapucho.mssysfinancadastro.entrypoint.http.ReceitaHttpRequest;
 import br.com.mcapucho.mssysfinancadastro.entrypoint.http.ReceitaHttpResponse;
 import br.com.mcapucho.mssysfinancadastro.entrypoint.mapper.ReceitaHttpMapper;
 import br.com.mcapucho.mssysfinancadastro.util.FilterPageable;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class ReceitaController {
         this.receitaUpdateUseCase = receitaUpdateUseCase;
     }
 
-    @SuppressWarnings("unused")
+    @Operation(summary = "Endpoint para criar uma nova receita")
     @PostMapping()
     public ResponseEntity<ReceitaHttpResponse> create(@Valid @RequestBody ReceitaHttpRequest request) {
         ReceitaEntity receitaEntity = receitaCreateUseCase.execute(receitaHttpMapper.httpToEntity(request));
@@ -51,6 +52,7 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(receitaHttpMapper.entityToHttp(receitaEntity));
     }
 
+    @Operation(summary = "Endpoint para listar todas as receitas")
     @GetMapping()
     public ResponseEntity<List<ReceitaHttpResponse>> findAll() {
         List<ReceitaEntity> receitaEntityList = receitaListUseCase.execute();
@@ -66,7 +68,7 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponseList);
     }
 
-    @SuppressWarnings("unused")
+    @Operation(summary = "Endpoint para listar todas as receitas com paginação")
     @GetMapping("/page")
     public ResponseEntity<List<ReceitaHttpResponse>> findAllPageable(FilterPageable filterPageable) {
         List<ReceitaEntity> receitaEntityList = receitaListUseCase.execute(filterPageable);
@@ -82,6 +84,7 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponseList);
     }
 
+    @Operation(summary = "Endpoint para listar uma receita através do ID informado")
     @GetMapping("/{id}")
     public ResponseEntity<ReceitaHttpResponse> findById(@PathVariable("id") String transactionId) {
         ReceitaEntity receitaEntity = receitaFindByIdUseCase.execute(transactionId);
@@ -90,14 +93,14 @@ public class ReceitaController {
         return ResponseEntity.status(HttpStatus.OK).body(receitaHttpResponse);
     }
 
-    @SuppressWarnings("unused")
+    @Operation(summary = "Endpoint para deletar uma receita através do ID informado")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable("id") String transactionId) {
         receitaDeleteByIdUseCase.execute(transactionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @SuppressWarnings("unused")
+    @Operation(summary = "Endpoint para atualizar uma receita através do ID informado")
     @PatchMapping("/{id}")
     public ResponseEntity<ReceitaHttpResponse> updateById(@PathVariable("id") String transactionId,
                                                           @RequestBody ReceitaHttpRequest receitaHttpRequest) {

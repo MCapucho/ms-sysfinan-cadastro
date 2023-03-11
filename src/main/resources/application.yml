@@ -19,6 +19,8 @@ management:
       exposure:
         include: '*'
   metrics:
+    tags:
+      application: ${spring.application.name}
     export:
       prometheus:
         enabled: true
@@ -27,3 +29,9 @@ management:
       enabled: false
     prometheus:
       enabled: true
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
